@@ -1,0 +1,21 @@
+@import '../../styles/variables';
+
+.card, .table {
+    color: $gray-600;
+}
+label {
+    font-weight: normal;
+    text-align: left;
+    white-space: nowrap;
+}
+.filter {
+    text-align: right;
+    label {
+        display: flex;
+    }
+}
+.dataTables_paginate {
+    margin: 0;
+    white-space: nowrap;
+    text-align: right;
+}

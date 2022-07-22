@@ -1,0 +1,15 @@
+li.nav-item.dropdown.no-arrow
+    a.nav-link.dropdown-toggle(
+        v-bind:id='dropdownLinkId'
+        href='#' 
+        role='button' 
+        data-toggle='dropdown' 
+        aria-haspopup='true' 
+        aria-expanded='false'
+    )
+        span.mr-2.d-none.d-lg-inline.text-gray-600.small {{ title }}
+        img.img-profile.rounded-circle(v-bind:src='image_url')
+    // Dropdown - User Information
+    dynamic-component(
+        v-bind:component_infos='dropdownSection'
+    )

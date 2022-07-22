@@ -1,0 +1,38 @@
+@import '~bootstrap/scss/bootstrap';
+@import '../../../../styles/variables';
+
+.nav-link {
+    position: relative;
+    color: #d1d3e2 !important;
+    height: $topbar-base-height;
+    display: flex;
+    align-items: center;
+    padding: 0 0.75rem;
+    font-size: 16px;
+    &:focus {
+        outline: none;
+    }
+}
+
+.nav-link:hover {
+    color: #b7b9cc !important;
+}
+
+.nav-link:active {
+    color: #858796 !important;
+}
+
+.nav-item {
+    &:focus {
+        outline: none;
+    }
+}
+
+.badge-counter {
+    position: absolute;
+    transform: scale(0.7);
+    transform-origin: top right;
+    right: .6rem;
+    margin-top: -.25rem;
+    font-size: 12px;
+}

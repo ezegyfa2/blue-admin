@@ -1,0 +1,22 @@
+.card.o-hidden.border-0.shadow-lg.my-5
+    .card-body.p-0
+        .row
+            .col-lg-6.d-none.d-lg-block(v-bind:style='imageStyle')
+            .col-lg-6
+                .p-5
+                    .text-center
+                        h1.h4.text-gray-900.mb-4 {{ title }}
+                    form.user
+                        .form-group(v-for='inputSection in input_sections')
+                            dynamic-component(v-bind:component_infos='inputSection')
+                        dynamic-component(v-bind:component_infos='main_button_section')
+                        hr(v-if='secondary_button_sections && secondary_button_sections.length > 0')
+                        dynamic-component(
+                            v-for='secondaryButtonSection in secondary_button_sections'
+                            v-bind:component_infos='secondaryButtonSection'
+                        )
+                    hr(v-if='link_sections && link_sections.length > 0')
+                    dynamic-component(
+                        v-for='linkSection in link_sections'
+                        v-bind:component_infos='linkSection'
+                    )

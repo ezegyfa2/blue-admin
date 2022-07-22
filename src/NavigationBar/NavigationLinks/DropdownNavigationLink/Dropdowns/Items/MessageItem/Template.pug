@@ -1,0 +1,8 @@
+a.dropdown-item.d-flex.align-items-center(v-bind:href='url')
+    .dropdown-list-image.mr-3
+        img.rounded-circle(v-bind:src='image_url' v-bind:alt='image_alt')
+        .status-indicator.bg-success
+    .font-weight-bold
+        .text-truncate
+            | {{ content }}
+        .small.text-gray-500 {{ sub_content }}

@@ -5,12 +5,6 @@
 <script>
     export default {
         props: {
-            sidebar_section: {
-                type: Object
-            },
-            navigation_bar_section: {
-                type: Object
-            },
             content_section: {
                 type: Object
             }

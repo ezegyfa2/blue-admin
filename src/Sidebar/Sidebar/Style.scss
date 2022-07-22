@@ -1,0 +1,67 @@
+@import '../../styles/variables';
+@import '~bootstrap/scss/bootstrap';
+@import '../../styles/utilities';
+
+.sidebar {
+    width: $sidebar-collapsed-width;
+    min-height: 100vh;
+
+    &.toggled {
+        width: 0 !important;
+        overflow: hidden;
+    
+        #sidebarToggle::after {
+            content: '\f105';
+            font-family: 'Font Awesome 5 Free';
+            margin-left: 0.25rem;
+            color: fade-out($white, 0.5);
+        }
+    
+        .sidebar-card {
+            display: none;
+        }
+    }
+}
+.toggler {
+    padding: 1rem;
+}
+#sidebarToggle {
+    width: 2.5rem;
+    height: 2.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    background-color: fade-out($white, 0.8);
+
+    &::after {
+        color: fade-out($white, 0.5);
+        font-weight: 900;
+        content: '\f104';
+        font-family: 'Font Awesome 5 Free';
+        margin-right: 0.1rem;
+    }
+
+    &:hover {
+        background-color: fade-out($white, 0.75);
+        text-decoration: none;
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
+
+hr.sidebar-divider {
+    margin: 0 1rem 1rem;
+    border-top: 1px solid fade-out($white, 0.85);
+}
+
+@include media-breakpoint-up(md) {
+    .sidebar {
+        width: $sidebar-base-width !important;
+        &.toggled {
+            overflow: visible;
+            width: $sidebar-collapsed-width !important;
+        }
+    }
+}

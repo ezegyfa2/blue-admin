@@ -1,0 +1,6 @@
+.sidebar-card.d-none.d-lg-flex
+    img.sidebar-card-illustration.mb-2(v-bind:src='image_url' v-bind:alt='image_alt')
+    p.text-center.mb-2
+        strong {{ title }}
+        |    {{ content }}
+    a.btn.btn-success.btn-sm(v-bind:href='url') {{ button_title }}

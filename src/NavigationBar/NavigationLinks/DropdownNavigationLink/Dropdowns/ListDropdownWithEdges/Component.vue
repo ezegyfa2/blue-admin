@@ -5,13 +5,16 @@
 <script>
     export default {
         props: {
-            sidebar_section: {
-                type: Object
+            dropdown_link_id: {
+                type: String
             },
-            navigation_bar_section: {
-                type: Object
+            header: {
+                type: String
             },
-            content_section: {
+            dropdown_item_sections: {
+                type: Array
+            },
+            footer_link: {
                 type: Object
             }
         }

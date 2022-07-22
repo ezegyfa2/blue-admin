@@ -5,10 +5,7 @@
 <script>
     export default {
         props: {
-            sidebar_section: {
-                type: Object
-            },
-            navigation_bar_section: {
+            header_section: {
                 type: Object
             },
             content_section: {

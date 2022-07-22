@@ -1,0 +1,8 @@
+li.nav-item
+    a.nav-link.collapsed(href='#' data-toggle='collapse' v-bind:data-target='"#collapse" + this._uid' aria-expanded='true' aria-controls='collapse')
+        i(v-bind:class='icon_class')
+        span {{ title }}
+    .collapse(v-bind:id='"collapse" + this._uid')
+        .bg-white.py-2.collapse-inner.rounded
+            h6.collapse-header {{ collapsed_title }}
+            a.collapse-item(v-for='collapsed_link in collapsed_links' v-bind:href='collapsed_link.url') {{ collapsed_link.content }}

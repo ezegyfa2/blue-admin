@@ -1,0 +1,52 @@
+@import '~bootstrap/scss/bootstrap';
+@import '../../../../../../styles/variables';
+@import '../../../../../../styles/text';
+
+.dropdown-item {
+    white-space: normal;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border: 0;
+    line-height: 1.3rem;
+
+    width: 100%;
+    clear: both;
+    font-weight: 400;
+    color: #3a3b45;
+    text-align: inherit;
+    background-color: transparent;
+    .dropdown-list-image {
+        position: relative;
+        height: 2.5rem;
+        width: 2.5rem;
+        img {
+            height: 2.5rem;
+            width: 2.5rem;
+        }
+        .status-indicator {
+            background-color: $gray-200;
+            height: 0.75rem;
+            width: 0.75rem;
+            border-radius: 100%;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            border: .125rem solid $white;
+        }
+    }
+    .text-truncate {
+        max-width: 10rem;
+    }
+    &:active {
+        background-color: $gray-200;
+        color: $gray-900;
+    }
+}
+
+@include media-breakpoint-up(sm) {
+    .dropdown-item {
+        .text-truncate {
+            max-width: 13.375rem;
+        }
+    }
+}
