@@ -1,5 +1,5 @@
 <script>
-    import Select from '../../../../helper-vue-components/src/Select/Component.vue'
+    import Select from '../../../../helper-vue-components/src/Form/Select/Component.vue'
     import ClassAdder from '../../../../helper-vue-components/src/ClassAdder.vue'
 
     export default {

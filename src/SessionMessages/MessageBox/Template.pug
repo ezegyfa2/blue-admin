@@ -1,0 +1,4 @@
+.alert.alert-dismissible.fade.show(role='alert' v-bind:class='messageClass')
+    | {{ content }}
+    button.close(type='button' data-dismiss='alert' aria-label='Close')
+        span(aria-hidden='true') &times;

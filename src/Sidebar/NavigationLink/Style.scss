@@ -8,7 +8,7 @@
     .nav-link {
         text-align: center;
         padding: 0.75rem 1rem;
-        width: $sidebar-collapsed-width;
+        width: 100%;
         color: fade-out($white, 0.2);
 
         span {
@@ -18,6 +18,7 @@
 
         i, svg {
             color: fade-out($white, 0.7);
+            margin-right: 0.5rem;
         }
 
         &:active,
@@ -50,7 +51,7 @@
             width: 100%;
             text-align: left;
             padding: 1rem;
-            width: $sidebar-base-width;
+            width: 100%;
 
             i {
                 font-size: 0.85rem;
@@ -71,7 +72,7 @@
             .nav-link {
                 text-align: center;
                 padding: 0.75rem 1rem;
-                width: $sidebar-collapsed-width;
+                width: 100%;
 
                 span {
                     font-size: 0.65rem;

@@ -11,7 +11,7 @@
             row_to_show_counts: {
                 type: Array
             },
-            selected_row_to_show_counts: {
+            selected_row_to_show_count: {
                 type: Number
             },
             total_row_count: {
@@ -25,28 +25,40 @@
             },
             selected_page_number: {
                 type: Number
+            },
+            redirect_enabled: {
+                type: Boolean,
+                default: true
             }
         },
         data() {
             return {
-                selectedPageNumber: 0,
+                selectedPageNumber: 1,
                 selectedRowToShowCount: 10,
+                currentRows: [],
+                columnNames: [],
+                refreshDataEnabled: false,
+                totalRowCount: 0
             }
         },
         mounted() {
-            if (this.selected_page_number) {
-                this.selectedPageNumber = this.selected_page_number
-            }
-            if (this.selected_row_to_show_counts && this.row_to_show_counts.includes(this.selected_row_to_show_counts)) {
-                this.selectedRowToShowCount = this.selected_row_to_show_counts
-            }
-            else if (this.row_to_show_counts.length > 0) {
-                this.selectedRowToShowCount = this.row_to_show_counts[0]
+            console.log(this.$options)
+            this.refreshDataEnabled = true
+            if (!this.currentRows || this.currentRows.length == 0) {
+                this.refreshDataWithAjax()
             }
         },
         computed: {
+            validatedSelectedPageNumber() {
+                if (this.selectedPageNumber > this.pageCount) {
+                    return this.pageCount
+                }
+                else {
+                    return this.selectedPageNumber
+                }
+            },
             pageCount() {
-                let pageCount = this.total_row_count / this.selectedRowToShowCount
+                let pageCount = this.totalRowCount / this.selectedRowToShowCount
                 let roundedPageCount = Math.floor(pageCount)
                 if (pageCount == roundedPageCount) {
                     return roundedPageCount
@@ -55,44 +67,80 @@
                     return roundedPageCount + 1
                 }
             },
-            previousDisabledClass() {
-                if (this.selectedPageNumber == 1) {
-                    return 'disabled'
-                }
-                else {
-                    return ''
-                }
-            },
-            nextDisabledClass() {
-                if (this.selectedPageNumber == this.page_count) {
-                    return 'disabled'
-                }
-                else {
-                    return ''
-                }
-            },
             description() {
-                let startRowCount = (this.selectedPageNumber - 1) * this.selectedRowToShowCount
+                let startRowCount = (this.selectedPageNumber - 1) * this.selectedRowToShowCount + 1
                 let endRowCount = this.selectedPageNumber * this.selectedRowToShowCount
-                if (endRowCount > this.total_row_count) {
-                    endRowCount = this.total_row_count
+                if (endRowCount > this.totalRowCount) {
+                    endRowCount = this.totalRowCount
                 }
-                return "Showing " + startRowCount + " to " + endRowCount + " of " + this.total_row_count + " entries"
+                return "Showing " + startRowCount + " to " + endRowCount + " of " + this.totalRowCount + " entries"
             },
             queryLink() {
                 let link = new URL(window.location)
-                link.searchParams.set('page', this.selectedPageNumber)
+                link.searchParams.set('page-number', this.selectedPageNumber)
                 link.searchParams.set('row-count', this.selectedRowToShowCount)
-                return link
+                return link.toString()
+            },
+            createUrl() {
+                return window.location.origin + window.location.pathname + '/create/'
             }
         },
         watch: {
+            selected_row_to_show_count: {
+                immediate: true,
+                handler(newSelectedRowToShowCount, oldSelectedRowToShowCount) {
+                    if (oldSelectedRowToShowCount != newSelectedRowToShowCount) {
+                        this.selectedRowToShowCount = newSelectedRowToShowCount
+                    }
+                }
+            },
             selectedRowToShowCount: {
                 immediate: true,
                 handler(newSelectedRowToShowCount, oldSelectedRowToShowCount) {
-                    if (oldSelectedRowToShowCount && oldSelectedRowToShowCount != 0) {
+                    if (oldSelectedRowToShowCount != newSelectedRowToShowCount) {
                         this.selectedRowToShowCount = newSelectedRowToShowCount
-                        this.refreshPage()
+                        this.refreshData()
+                    }
+                }
+            },
+            selected_page_number: {
+                immediate: true,
+                handler(newSelectedPageNumber, oldSelectedPageNumber) {
+                    if (oldSelectedPageNumber != newSelectedPageNumber) {
+                        this.selectedPageNumber = newSelectedPageNumber
+                    }
+                }
+            },
+            selectedPageNumber: {
+                immediate: true,
+                handler(newSelectedPageNumber, oldSelectedPageNumber) {
+                    if (oldSelectedPageNumber != newSelectedPageNumber) {
+                        this.selectedPageNumber = newSelectedPageNumber
+                        this.refreshData()
+                    }
+                }
+            },
+            rows: {
+                immediate: true,
+                handler(newRows, oldRows) {
+                    if (oldRows != newRows) {
+                        this.currentRows = newRows
+                    }
+                }
+            },
+            column_names: {
+                immediate: true,
+                handler(newColumnNames, oldColumnNames) {
+                    if (oldColumnNames != newColumnNames) {
+                        this.columnNames = newColumnNames
+                    }
+                }
+            },
+            total_row_count: {
+                immediate: true,
+                handler(newTotalRowCount, oldTotalRowCount) {
+                    if (oldTotalRowCount != newTotalRowCount) {
+                        this.totalRowCount = newTotalRowCount
                     }
                 }
             }
@@ -100,15 +148,38 @@
         methods: {
             activePageClass(pageNumber) {
                 if (pageNumber == this.selectedPageNumber) {
-                    return 'active'
+                    return 'active unclickable'
                 }
                 else {
                     return ''
                 }
             },
-            refreshPage() {
-                console.log(this.queryLink)
-                window.location.replace(this.queryLink.href)
+            refreshData() {
+                if (this.refreshDataEnabled) {
+                    if (this.redirect_enabled) {
+                        let link = new URL(window.location)
+                        link.searchParams.set('page-number', this.selectedPageNumber)
+                        link.searchParams.set('row-count', this.selectedRowToShowCount)
+                        window.location.href = link.toString()
+                    }
+                    else {
+                        this.refreshDataWithAjax()
+                    }
+                }
+            },
+            refreshDataWithAjax() {
+                if (this.refreshDataEnabled) {
+                    let link = new URL(window.location)
+                    link.pathname += '/get-data'
+                    let self = this
+                    $.ajax({
+                        url: link.href
+                    }).done(function(data) {
+                        self.currentRows = data.rows,
+                        self.columnNames = data.column_names
+                        self.totalRowCount = data.total_row_count
+                    });
+                }
             }
         }
     }

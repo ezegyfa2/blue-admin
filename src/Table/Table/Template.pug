@@ -3,42 +3,37 @@
         .card-header.py-3
             h6.m-0.font-weight-bold.text-primary {{ title }}
         .card-body
-            .row
+            .row.mb-2
                 .col-sm-12.col-md-6
-                    .dataTables_length
-                        label
-                            | Show 
-                            blue-admin-table-select(
-                                :selected_option.sync='selectedRowToShowCount'
-                                v-bind:options='row_to_show_counts'
-                                name='row_to_show_count'
-                            )
-                            |    entries
-                .col-sm-12.col-md-6
+                    label
+                        | Show 
+                        blue-admin-table-select(
+                            :value.sync='selectedRowToShowCount'
+                            v-bind:options='row_to_show_counts'
+                            name='row_to_show_count'
+                        )
+                        |    entries
+                .col-sm-12.col-md-6.create_button_container
+                    blue-admin-create-button(
+                        content='Create'
+                        icon_class='fas fa-plus'
+                        v-bind:url='createUrl'
+                    )
+                //.col-sm-12.col-md-6
                     .filter
                         label
                             | Search:
                             input.form-control.form-control-sm(type='search' placeholder='')
-            .table-responsive
-                table.table.table-bordered(width='100%' cellspacing='0')
-                    thead
-                        tr
-                            th(v-for='columnName in column_names') {{ columnName }}
-                    tfoot
-                        tr
-                            th(v-for='columnName in column_names') {{ columnName }}
-                    tbody
-                        tr(v-for='row in rows')
-                            td(v-for='column in row') {{ column }}     
+            vue-table-with-edit-buttons(
+                v-bind:column_names='columnNames'
+                v-bind:rows='currentRows'
+                v-bind:with_footer='true'
+            ) 
             .row
                 .col-sm-12.col-md-5
                     .dataTables_info(role='status' aria-live='polite') {{ description }}
                 .col-sm-12.col-md-7
-                    .dataTables_paginate.paging_simple_numbers
-                        ul.pagination
-                            li#dataTable_previous.paginate_button.page-item.previous(v-bind:class='previousDisabledClass')
-                                a.page-link(href='#' aria-controls='dataTable' data-dt-idx='0' tabindex='0') Previous
-                            li.paginate_button.page-item(v-for='i in pageCount' :key='i' v-bind:class='activePageClass(i)')
-                                a.page-link(href='#' aria-controls='dataTable' data-dt-idx='i' tabindex='0') {{ i }}
-                            li#dataTable_next.paginate_button.page-item.next(v-bind:class='nextDisabledClass')
-                                a.page-link(href='#' aria-controls='dataTable' data-dt-idx='7' tabindex='0') Next
+                    bootstrap-pagination(
+                        v-bind:page_count='pageCount' 
+                        v-bind:selected_page_number='validatedSelectedPageNumber'
+                    )

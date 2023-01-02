@@ -1,0 +1,7 @@
+.container.mt-5
+    .row.justify-content-center
+        .col-xl-10.col-lg-11
+            dynamic-component(
+                v-for='content_section in content_sections'
+                v-bind:component_infos='content_section'
+            )
