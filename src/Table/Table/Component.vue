@@ -28,7 +28,7 @@
             },
             redirect_enabled: {
                 type: Boolean,
-                default: true
+                default: false
             }
         },
         data() {
@@ -38,11 +38,12 @@
                 currentRows: [],
                 columnNames: [],
                 refreshDataEnabled: false,
-                totalRowCount: 0
+                totalRowCount: 0,
+                filterSections: [],
+                filterFormItemTypePrefix: 'bootstrap-filter-form-item'
             }
         },
         mounted() {
-            console.log(this.$options)
             this.refreshDataEnabled = true
             if (!this.currentRows || this.currentRows.length == 0) {
                 this.refreshDataWithAjax()
@@ -88,8 +89,8 @@
         watch: {
             selected_row_to_show_count: {
                 immediate: true,
-                handler(newSelectedRowToShowCount, oldSelectedRowToShowCount) {
-                    if (oldSelectedRowToShowCount != newSelectedRowToShowCount) {
+                handler(newSelectedRowToShowCount) {
+                    if (newSelectedRowToShowCount && this.selectedRowToShowCount != newSelectedRowToShowCount) {
                         this.selectedRowToShowCount = newSelectedRowToShowCount
                     }
                 }
@@ -97,7 +98,8 @@
             selectedRowToShowCount: {
                 immediate: true,
                 handler(newSelectedRowToShowCount, oldSelectedRowToShowCount) {
-                    if (oldSelectedRowToShowCount != newSelectedRowToShowCount) {
+                    console.log('selectedRowToShowCount ' + newSelectedRowToShowCount)
+                    if (newSelectedRowToShowCount && oldSelectedRowToShowCount != newSelectedRowToShowCount) {
                         this.selectedRowToShowCount = newSelectedRowToShowCount
                         this.refreshData()
                     }
@@ -105,8 +107,8 @@
             },
             selected_page_number: {
                 immediate: true,
-                handler(newSelectedPageNumber, oldSelectedPageNumber) {
-                    if (oldSelectedPageNumber != newSelectedPageNumber) {
+                handler(newSelectedPageNumber) {
+                    if (this.selectedPageNumber != newSelectedPageNumber) {
                         this.selectedPageNumber = newSelectedPageNumber
                     }
                 }
@@ -175,9 +177,11 @@
                     $.ajax({
                         url: link.href
                     }).done(function(data) {
+                        console.log(data)
                         self.currentRows = data.rows,
                         self.columnNames = data.column_names
                         self.totalRowCount = data.total_row_count
+                        self.filterSections = data.filter_sections
                     });
                 }
             }
