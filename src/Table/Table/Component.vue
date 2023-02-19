@@ -93,7 +93,8 @@
                     if (newSelectedRowToShowCount && this.selectedRowToShowCount != newSelectedRowToShowCount) {
                         this.selectedRowToShowCount = newSelectedRowToShowCount
                     }
-                }
+                },
+                flush: 'sync'
             },
             selectedRowToShowCount: {
                 immediate: true,
