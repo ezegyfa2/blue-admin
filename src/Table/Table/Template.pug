@@ -8,7 +8,7 @@
                     label
                         | Show 
                         blue-admin-table-select(
-                            :value.sync='selectedRowToShowCount'
+                            v-bind:value.sync='selected_row_to_show_count'
                             v-bind:options='row_to_show_counts'
                             name='row_to_show_count'
                         )
@@ -19,15 +19,12 @@
                         icon_class='fas fa-plus'
                         v-bind:url='createUrl'
                     )
-                //.col-sm-12.col-md-6
-                    .filter
-                        label
-                            | Search:
-                            input.form-control.form-control-sm(type='search' placeholder='')
             vue-table-with-edit-buttons(
                 v-bind:column_names='columnNames'
                 v-bind:rows='currentRows'
                 v-bind:with_footer='true'
+                v-bind:filter_sections='filterSections'
+                v-bind:filter_form_item_type_prefix='filterFormItemTypePrefix'
             ) 
             .row
                 .col-sm-12.col-md-5
@@ -35,5 +32,6 @@
                 .col-sm-12.col-md-7
                     bootstrap-pagination(
                         v-bind:page_count='pageCount' 
-                        v-bind:selected_page_number='validatedSelectedPageNumber'
+                        v-bind:selected_page_number.sync='selectedPageNumber'
+                        v-bind:url_enabled='false'
                     )

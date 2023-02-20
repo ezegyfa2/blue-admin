@@ -6,19 +6,7 @@
         mixins: [
             Select,
             ClassAdder,
-        ],
-        data() {
-            return {
-                addedClasses: {
-                    root: [
-                        'custom-select',
-                        'custom-select-sm',
-                        'form-control',
-                        'form-control-sm',
-                    ]
-                }
-            }
-        }
+        ]
     }
 </script>
 
