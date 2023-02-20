@@ -3,12 +3,7 @@
 </template>
 
 <script>
-    import DataTransmitting from '../../../../helper-vue-components/src/DataTransmitting.vue'
-
     export default {
-        mixins: [
-            DataTransmitting,
-        ],
         props: {
             title: {
                 type: String
@@ -37,7 +32,7 @@
             },
             redirect_enabled: {
                 type: Boolean,
-                default: true
+                default: false
             },
             filter_sections: {
                 type: Array,
@@ -57,7 +52,7 @@
                 refreshDataEnabled: false,
                 totalRowCount: 0,
                 filterSections: [],
-                filterFormItemTypePrefix: null,
+                filterFormItemTypePrefix: 'bootstrap-filter-form-item'
                 dataTransmits: {
                     selectedPageNumber: 'selected_page_number',
                     currentRows: 'rows',
