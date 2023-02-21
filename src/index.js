@@ -3,6 +3,8 @@ export default {
 		require('helper-vue-components').default.install(Vue);
 		require('text-contents-vue-components').default.install(Vue);
 
+		require('./Templates/templateRegister').default.install()
+
 		registerVueComponent(
 			'blue-admin-page', 
 			require('./AdminPage/Component.vue').default, 

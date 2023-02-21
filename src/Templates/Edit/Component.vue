@@ -1,16 +1,13 @@
 <script>
-    import Layout from '../Layout/Component.vue'
+    import Template from '../../../../helper-vue-components/src/Template/Component.vue'
 
     export default {
         mixins: [
-            Layout
+            Template
         ],
         data() {
             return {
                 mainTemplatePath: 'edit',
-                templates: {
-                    edit: require('./edit').default,
-                }
             }
         }
     }
