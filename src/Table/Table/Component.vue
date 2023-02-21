@@ -12,13 +12,17 @@
                 type: Array
             },
             selected_row_to_show_count: {
-                type: Number
+                type: Number,
+                default: 10
             },
             total_row_count: {
                 type: Number
             },
             column_names: {
-                type: Array
+                type: Array,
+                default() {
+                    return []
+                }
             },
             rows: {
                 type: Array
@@ -29,18 +33,34 @@
             redirect_enabled: {
                 type: Boolean,
                 default: false
+            },
+            filter_sections: {
+                type: Array,
+                default() {
+                    return []
+                }
+            },
+            filter_form_item_type_prefix: {
+                type: String
             }
         },
         data() {
             return {
                 selectedPageNumber: 1,
-                selectedRowToShowCount: 10,
                 currentRows: [],
                 columnNames: [],
                 refreshDataEnabled: false,
                 totalRowCount: 0,
                 filterSections: [],
                 filterFormItemTypePrefix: 'bootstrap-filter-form-item'
+                dataTransmits: {
+                    selectedPageNumber: 'selected_page_number',
+                    currentRows: 'rows',
+                    columnNames: 'column_names',
+                    totalRowCount: 'total_row_count',
+                    filterSections: 'filter_sections',
+                    filterFormItemTypePrefix: 'filter_form_item_type_prefix'
+                }
             }
         },
         mounted() {
@@ -50,16 +70,8 @@
             }
         },
         computed: {
-            validatedSelectedPageNumber() {
-                if (this.selectedPageNumber > this.pageCount) {
-                    return this.pageCount
-                }
-                else {
-                    return this.selectedPageNumber
-                }
-            },
             pageCount() {
-                let pageCount = this.totalRowCount / this.selectedRowToShowCount
+                let pageCount = this.totalRowCount / this.selected_row_to_show_count
                 let roundedPageCount = Math.floor(pageCount)
                 if (pageCount == roundedPageCount) {
                     return roundedPageCount
@@ -69,8 +81,11 @@
                 }
             },
             description() {
-                let startRowCount = (this.selectedPageNumber - 1) * this.selectedRowToShowCount + 1
-                let endRowCount = this.selectedPageNumber * this.selectedRowToShowCount
+                let startRowCount = (this.selectedPageNumber - 1) * this.selected_row_to_show_count + 1
+                if (startRowCount > this.totalRowCount) {
+                    startRowCount = this.totalRowCount
+                }
+                let endRowCount = this.selectedPageNumber * this.selected_row_to_show_count
                 if (endRowCount > this.totalRowCount) {
                     endRowCount = this.totalRowCount
                 }
@@ -79,72 +94,79 @@
             queryLink() {
                 let link = new URL(window.location)
                 link.searchParams.set('page-number', this.selectedPageNumber)
-                link.searchParams.set('row-count', this.selectedRowToShowCount)
+                link.searchParams.set('row-count', this.selected_row_to_show_count)
                 return link.toString()
             },
             createUrl() {
                 return window.location.origin + window.location.pathname + '/create/'
+            },
+            pageNumberUrlParam() {
+                return parseInt(new URL(window.location).searchParams.get('page-number'))
+            },
+            rowToShowCountUrlParam() {
+                return parseInt(new URL(window.location).searchParams.get('row-count'))
+            },
+            refreshInputData() {
+                return {
+                    'page-number': this.selectedPageNumber, 
+                    'row-count': this.selected_row_to_show_count,
+                    'filter-data': this.filterData,
+                    '_token': document.querySelector('meta[name="csrf-token"]').content
+                }
+            },
+            filterData() {
+                let filterSectionsData = {}
+                this.filterSections.forEach((filterSection) => {
+                    let filterData = {
+                        name: filterSection.data.name,
+                    }
+                    if (typeof filterSection.data.value !== 'undefined' && filterSection.data.value !== null) {
+                        if (filterSection.data.value && typeof filterSection.data.value == 'object') {
+                            if (typeof filterSection.data.value.value !== 'undefined' && filterSection.data.value.value !== null) {
+                                filterData.value = filterSection.data.value.value
+                            }
+                        }
+                        else {
+                            filterData.value = filterSection.data.value
+                        }
+                    } 
+                    if (typeof filterSection.data.from_value !== 'undefined' && filterSection.data.from_value !== null) {
+                        filterData.from_value = filterSection.data.from_value
+                    } 
+                    if (typeof filterSection.data.to_value !== 'undefined' && filterSection.data.to_value !== null) {
+                        filterData.to_value = filterSection.data.to_value
+                    } 
+                    filterSectionsData[filterSection.data.name] = filterData
+                })
+                return filterSectionsData
+            },
+            token() {
+                return document.querySelector('meta[name="csrf-token"]').content
             }
         },
         watch: {
             selected_row_to_show_count: {
-                immediate: true,
-                handler(newSelectedRowToShowCount) {
-                    if (newSelectedRowToShowCount && this.selectedRowToShowCount != newSelectedRowToShowCount) {
-                        this.selectedRowToShowCount = newSelectedRowToShowCount
-                    }
-                },
-                flush: 'sync'
-            },
-            selectedRowToShowCount: {
-                immediate: true,
                 handler(newSelectedRowToShowCount, oldSelectedRowToShowCount) {
-                    console.log('selectedRowToShowCount ' + newSelectedRowToShowCount)
-                    if (newSelectedRowToShowCount && oldSelectedRowToShowCount != newSelectedRowToShowCount) {
-                        this.selectedRowToShowCount = newSelectedRowToShowCount
-                        this.refreshData()
-                    }
-                }
-            },
-            selected_page_number: {
-                immediate: true,
-                handler(newSelectedPageNumber) {
-                    if (this.selectedPageNumber != newSelectedPageNumber) {
-                        this.selectedPageNumber = newSelectedPageNumber
+                    console.log('sdf')
+                    if (typeof newSelectedRowToShowCount !== 'undefined' && newSelectedRowToShowCount !== null && newSelectedRowToShowCount != oldSelectedRowToShowCount 
+                        && (!this.redirect_enabled || newSelectedRowToShowCount != this.rowToShowCountUrlParam)) {
+                            if (this.selectedPageNumber == 1) {
+                                this.refreshData()
+                            }
+                            else {
+                                this.selectedPageNumber = 1
+                            }
                     }
                 }
             },
             selectedPageNumber: {
-                immediate: true,
                 handler(newSelectedPageNumber, oldSelectedPageNumber) {
-                    if (oldSelectedPageNumber != newSelectedPageNumber) {
-                        this.selectedPageNumber = newSelectedPageNumber
-                        this.refreshData()
-                    }
-                }
-            },
-            rows: {
-                immediate: true,
-                handler(newRows, oldRows) {
-                    if (oldRows != newRows) {
-                        this.currentRows = newRows
-                    }
-                }
-            },
-            column_names: {
-                immediate: true,
-                handler(newColumnNames, oldColumnNames) {
-                    if (oldColumnNames != newColumnNames) {
-                        this.columnNames = newColumnNames
-                    }
-                }
-            },
-            total_row_count: {
-                immediate: true,
-                handler(newTotalRowCount, oldTotalRowCount) {
-                    if (oldTotalRowCount != newTotalRowCount) {
-                        this.totalRowCount = newTotalRowCount
-                    }
+                    console.log('selectedPageNumber ' + newSelectedPageNumber)
+                    this.$nextTick(() => {
+                        if (typeof newSelectedPageNumber !== 'undefined' && newSelectedPageNumber !== null && (!this.redirect_enabled || (newSelectedPageNumber != this.pageNumberUrlParam))) {
+                            this.refreshData()
+                        }
+                    })
                 }
             }
         },
@@ -158,12 +180,9 @@
                 }
             },
             refreshData() {
-                if (this.refreshDataEnabled) {
+                if (this.refreshDataEnabled && this.selected_row_to_show_count && this.selectedPageNumber) {
                     if (this.redirect_enabled) {
-                        let link = new URL(window.location)
-                        link.searchParams.set('page-number', this.selectedPageNumber)
-                        link.searchParams.set('row-count', this.selectedRowToShowCount)
-                        window.location.href = link.toString()
+                        $.redirect(window.location.href, this.refreshInputData)
                     }
                     else {
                         this.refreshDataWithAjax()
@@ -175,11 +194,12 @@
                     let link = new URL(window.location)
                     link.pathname += '/get-data'
                     let self = this
-                    $.ajax({
-                        url: link.href
+                    $.post({
+                        url: link.href,
+                        data: this.refreshInputData
                     }).done(function(data) {
-                        console.log(data)
-                        self.currentRows = data.rows,
+                        console.log(data.filter_sections)
+                        self.currentRows = data.rows
                         self.columnNames = data.column_names
                         self.totalRowCount = data.total_row_count
                         self.filterSections = data.filter_sections
