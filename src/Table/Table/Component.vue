@@ -46,22 +46,12 @@
         },
         data() {
             return {
-                selectedPageNumber: 1,
                 currentRows: [],
-                columnNames: [],
                 refreshDataEnabled: false,
                 redirected: false,
                 dataRefresher: new Waiter(500),
-                totalRowCount: 0,
-                filterSections: [],
-                filterFormItemTypePrefix: 'bootstrap-filter',
                 dataTransmits: {
-                    selectedPageNumber: 'selected_page_number',
                     currentRows: 'rows',
-                    columnNames: 'column_names',
-                    totalRowCount: 'total_row_count',
-                    filterSections: 'filter_sections',
-                    filterFormItemTypePrefix: 'filter_form_item_type_prefix'
                 }
             }
         },
@@ -73,7 +63,7 @@
         },
         computed: {
             pageCount() {
-                let pageCount = this.totalRowCount / this.selected_row_to_show_count
+                let pageCount = this.total_row_count / this.selected_row_to_show_count
                 let roundedPageCount = Math.floor(pageCount)
                 if (pageCount == roundedPageCount) {
                     return roundedPageCount
@@ -83,19 +73,19 @@
                 }
             },
             description() {
-                let startRowCount = (this.selectedPageNumber - 1) * this.selected_row_to_show_count + 1
-                if (startRowCount > this.totalRowCount) {
-                    startRowCount = this.totalRowCount
+                let startRowCount = (this.selected_page_number - 1) * this.selected_row_to_show_count + 1
+                if (startRowCount > this.total_row_count) {
+                    startRowCount = this.total_row_count
                 }
-                let endRowCount = this.selectedPageNumber * this.selected_row_to_show_count
-                if (endRowCount > this.totalRowCount) {
-                    endRowCount = this.totalRowCount
+                let endRowCount = this.selected_page_number * this.selected_row_to_show_count
+                if (endRowCount > this.total_row_count) {
+                    endRowCount = this.total_row_count
                 }
-                return "Showing " + startRowCount + " to " + endRowCount + " of " + this.totalRowCount + " entries"
+                return "Showing " + startRowCount + " to " + endRowCount + " of " + this.total_row_count + " entries"
             },
             queryLink() {
                 let link = new URL(window.location)
-                link.searchParams.set('page-number', this.selectedPageNumber)
+                link.searchParams.set('page-number', this.selected_page_number)
                 link.searchParams.set('row-count', this.selected_row_to_show_count)
                 return link.toString()
             },
@@ -110,7 +100,7 @@
             },
             refreshInputData() {
                 return {
-                    'page-number': this.selectedPageNumber, 
+                    'page-number': this.selected_page_number, 
                     'row-count': this.selected_row_to_show_count,
                     'filter-data': this.filterData,
                     '_token': document.querySelector('meta[name="csrf-token"]').content
@@ -118,7 +108,7 @@
             },
             filterData() {
                 let filterSectionsData = {}
-                this.filterSections.forEach((filterSection) => {
+                this.filter_sections.forEach((filterSection) => {
                     let filterData = {
                         name: filterSection.data.name,
                     }
@@ -151,11 +141,11 @@
                 handler(newSelectedRowToShowCount, oldSelectedRowToShowCount) {
                     if (typeof newSelectedRowToShowCount !== 'undefined' && newSelectedRowToShowCount !== null && newSelectedRowToShowCount != oldSelectedRowToShowCount 
                         && (!this.redirect_enabled || newSelectedRowToShowCount != this.rowToShowCountUrlParam)) {
-                            if (this.selectedPageNumber == 1) {
+                            if (this.selected_page_number == 1) {
                                 this.refreshData()
                             }
                             else {
-                                this.selectedPageNumber = 1
+                                this.$emit('update:selected_page_number', 1)
                             }
                     }
                 }
@@ -173,7 +163,7 @@
         },
         methods: {
             activePageClass(pageNumber) {
-                if (pageNumber == this.selectedPageNumber) {
+                if (pageNumber == this.selected_page_number) {
                     return 'active unclickable'
                 }
                 else {
@@ -181,7 +171,7 @@
                 }
             },
             refreshData() {
-                if (this.refreshDataEnabled && this.selected_row_to_show_count && this.selectedPageNumber) {
+                if (this.refreshDataEnabled && this.selected_row_to_show_count && this.selected_page_number) {
                     if (this.redirect_enabled) {
                         if (!this.redirected) {
                             this.redirected = true
@@ -205,9 +195,9 @@
                         }).done(function(data) {
                             console.log(JSON.parse(JSON.stringify(data.filter_sections)))
                             self.currentRows = data.rows
-                            self.columnNames = data.column_names
-                            self.totalRowCount = data.total_row_count
-                            self.filterSections = data.filter_sections
+                        this.$emit('update:column_names', data.column_names)
+                        this.$emit('update:total_row_count', data.total_row_count)
+                        this.$emit('update:filter_sections', data.filter_sections)
                         })
                     })
                 }

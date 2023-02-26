@@ -29,15 +29,11 @@
             return {
                 dataTransmits: {
                     'toggled': 'isToggled',
-                    'brandSection': 'brand_section',
-                    'navigationLinkGroupSections': 'navigation_link_group_sections'
                 },
-                brandSection: null,
-                navigationLinkGroupSections: [],
                 deepProperties: {
                     'toggled': [
-                        'brandSection',
-                        'navigationLinkGroupSections'
+                        'brand_section',
+                        'navigation_link_group_sections',
                     ]
                 }
             }
