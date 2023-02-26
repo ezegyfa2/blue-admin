@@ -150,7 +150,7 @@
                     }
                 }
             },
-            selectedPageNumber: {
+            selected_page_number: {
                 handler(newSelectedPageNumber, oldSelectedPageNumber) {
                     console.log('selectedPageNumber ' + newSelectedPageNumber)
                     this.$nextTick(() => {
@@ -192,12 +192,12 @@
                         $.post({
                             url: link.href,
                             data: this.refreshInputData
-                        }).done(function(data) {
+                        }).done((data) => {
                             console.log(JSON.parse(JSON.stringify(data.filter_sections)))
                             self.currentRows = data.rows
-                        this.$emit('update:column_names', data.column_names)
-                        this.$emit('update:total_row_count', data.total_row_count)
-                        this.$emit('update:filter_sections', data.filter_sections)
+                            this.$emit('update:column_names', data.column_names)
+                            this.$emit('update:total_row_count', data.total_row_count)
+                            this.$emit('update:filter_sections', data.filter_sections)
                         })
                     })
                 }
