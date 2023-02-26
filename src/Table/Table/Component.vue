@@ -47,6 +47,8 @@
         data() {
             return {
                 refreshDataEnabled: false,
+                redirected: false,
+                dataRefresher: new Waiter(500),
             }
         },
         mounted() {
@@ -133,7 +135,6 @@
         watch: {
             selected_row_to_show_count: {
                 handler(newSelectedRowToShowCount, oldSelectedRowToShowCount) {
-                    console.log('sdf')
                     if (typeof newSelectedRowToShowCount !== 'undefined' && newSelectedRowToShowCount !== null && newSelectedRowToShowCount != oldSelectedRowToShowCount 
                         && (!this.redirect_enabled || newSelectedRowToShowCount != this.rowToShowCountUrlParam)) {
                             if (this.selected_page_number == 1) {
@@ -143,6 +144,16 @@
                                 this.$emit('update:selected_page_number', 1)
                             }
                     }
+                }
+            },
+            selected_page_number: {
+                handler(newSelectedPageNumber, oldSelectedPageNumber) {
+                    console.log('selectedPageNumber ' + newSelectedPageNumber)
+                    this.$nextTick(() => {
+                        if (typeof newSelectedPageNumber !== 'undefined' && newSelectedPageNumber !== null && (!this.redirect_enabled || (newSelectedPageNumber != this.pageNumberUrlParam))) {
+                            this.refreshData()
+                        }
+                    })
                 }
             }
         },
@@ -158,7 +169,10 @@
             refreshData() {
                 if (this.refreshDataEnabled && this.selected_row_to_show_count && this.selected_page_number) {
                     if (this.redirect_enabled) {
-                        $.redirect(window.location.href, this.refreshInputData)
+                        if (!this.redirected) {
+                            this.redirected = true
+                            $.redirect(window.location.href, this.refreshInputData)
+                        }
                     }
                     else {
                         this.refreshDataWithAjax()
@@ -167,19 +181,21 @@
             },
             refreshDataWithAjax() {
                 if (this.refreshDataEnabled) {
-                    let link = new URL(window.location)
-                    link.pathname += '/get-data'
-                    let self = this
-                    $.post({
-                        url: link.href,
-                        data: this.refreshInputData
-                    }).done(function(data) {
-                        console.log(data.filter_sections)
+                    this.dataRefresher.resetAndExecute(() => {
+                        let link = new URL(window.location)
+                        link.pathname += '/get-data'
+                        let self = this
+                        $.post({
+                            url: link.href,
+                            data: this.refreshInputData
+                        }).done((data) => {
+                            console.log(JSON.parse(JSON.stringify(data.filter_sections)))
                         this.$emit('update:rows', data.rows)
-                        this.$emit('update:column_names', data.column_names)
-                        this.$emit('update:total_row_count', data.total_row_count)
-                        this.$emit('update:filter_sections', data.filter_sections)
-                    });
+                            this.$emit('update:column_names', data.column_names)
+                            this.$emit('update:total_row_count', data.total_row_count)
+                            this.$emit('update:filter_sections', data.filter_sections)
+                        })
+                    })
                 }
             }
         }

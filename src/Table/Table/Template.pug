@@ -25,6 +25,7 @@
                 v-bind:with_footer='true'
                 v-bind:filter_sections='filter_sections'
                 v-bind:filter_form_item_type_prefix='filter_form_item_type_prefix'
+                v-on:update:filter_sections='refreshDataWithAjax'
             ) 
             .row
                 .col-sm-12.col-md-5
