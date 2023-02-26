@@ -20,11 +20,11 @@
                         v-bind:url='createUrl'
                     )
             vue-table-with-edit-buttons(
-                v-bind:column_names='columnNames'
+                v-bind:column_names='column_names'
                 v-bind:rows='currentRows'
                 v-bind:with_footer='true'
-                v-bind:filter_sections='filterSections'
-                v-bind:filter_form_item_type_prefix='filterFormItemTypePrefix'
+                v-bind:filter_sections='filter_sections'
+                v-bind:filter_form_item_type_prefix='filter_form_item_type_prefix'
             ) 
             .row
                 .col-sm-12.col-md-5
@@ -32,6 +32,6 @@
                 .col-sm-12.col-md-7
                     bootstrap-pagination(
                         v-bind:page_count='pageCount' 
-                        v-bind:selected_page_number.sync='selectedPageNumber'
+                        v-bind:selected_page_number.sync='selected_page_number'
                         v-bind:url_enabled='false'
                     )

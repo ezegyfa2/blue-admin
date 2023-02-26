@@ -1,13 +1,13 @@
 ul.accordionSidebar.navbar-nav.bg-gradient-primary.sidebar.accordion(ref='sidebar' v-bind:class='toggledClass')
     dynamic-component(
-        v-bind:component_infos='brandSection'
+        v-bind:component_infos='brand_section'
     )
     hr.sidebar-divider.my-0
     div(
-        v-for="navigationLinkGroupSection in navigationLinkGroupSections"
+        v-for="navigationLinkGroupSection in navigation_link_group_sections"
     )
         dynamic-component(
-            v-bind:component_infos='navigationLinkGroupSection'
+            v-bind:component_infos='navigation_link_group_section'
         )
         hr.sidebar-divider.my-0
     // Sidebar Toggler (Sidebar)
