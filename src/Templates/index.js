@@ -1,5 +1,5 @@
 export default {
-    "template_path": "layout",
+    "template_type_name": "blue_admin_layout",
     "params": {
         "content_sections": [
             {

@@ -50,9 +50,11 @@
                 currentRows: [],
                 columnNames: [],
                 refreshDataEnabled: false,
+                redirected: false,
+                dataRefresher: new Waiter(500),
                 totalRowCount: 0,
                 filterSections: [],
-                filterFormItemTypePrefix: 'bootstrap-filter-form-item'
+                filterFormItemTypePrefix: 'bootstrap-filter',
                 dataTransmits: {
                     selectedPageNumber: 'selected_page_number',
                     currentRows: 'rows',
@@ -147,7 +149,6 @@
         watch: {
             selected_row_to_show_count: {
                 handler(newSelectedRowToShowCount, oldSelectedRowToShowCount) {
-                    console.log('sdf')
                     if (typeof newSelectedRowToShowCount !== 'undefined' && newSelectedRowToShowCount !== null && newSelectedRowToShowCount != oldSelectedRowToShowCount 
                         && (!this.redirect_enabled || newSelectedRowToShowCount != this.rowToShowCountUrlParam)) {
                             if (this.selectedPageNumber == 1) {
@@ -182,7 +183,10 @@
             refreshData() {
                 if (this.refreshDataEnabled && this.selected_row_to_show_count && this.selectedPageNumber) {
                     if (this.redirect_enabled) {
-                        $.redirect(window.location.href, this.refreshInputData)
+                        if (!this.redirected) {
+                            this.redirected = true
+                            $.redirect(window.location.href, this.refreshInputData)
+                        }
                     }
                     else {
                         this.refreshDataWithAjax()
@@ -191,19 +195,21 @@
             },
             refreshDataWithAjax() {
                 if (this.refreshDataEnabled) {
-                    let link = new URL(window.location)
-                    link.pathname += '/get-data'
-                    let self = this
-                    $.post({
-                        url: link.href,
-                        data: this.refreshInputData
-                    }).done(function(data) {
-                        console.log(data.filter_sections)
-                        self.currentRows = data.rows
-                        self.columnNames = data.column_names
-                        self.totalRowCount = data.total_row_count
-                        self.filterSections = data.filter_sections
-                    });
+                    this.dataRefresher.resetAndExecute(() => {
+                        let link = new URL(window.location)
+                        link.pathname += '/get-data'
+                        let self = this
+                        $.post({
+                            url: link.href,
+                            data: this.refreshInputData
+                        }).done(function(data) {
+                            console.log(JSON.parse(JSON.stringify(data.filter_sections)))
+                            self.currentRows = data.rows
+                            self.columnNames = data.column_names
+                            self.totalRowCount = data.total_row_count
+                            self.filterSections = data.filter_sections
+                        })
+                    })
                 }
             }
         }

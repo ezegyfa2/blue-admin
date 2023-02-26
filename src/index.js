@@ -25,19 +25,6 @@ export default {
 		);
 
 		registerVueComponent(
-			'blue-admin-index-template',
-			require('./Templates/Index/Component.vue').default,
-			Vue,
-			'blue-admin-vue-components/Templates/Index/Component.vue'
-		);
-		registerVueComponent(
-			'blue-admin-edit-template',
-			require('./Templates/Edit/Component.vue').default,
-			Vue,
-			'blue-admin-vue-components/Templates/Edit/Component.vue'
-		);
-
-		registerVueComponent(
 			'blue-admin-form',
 			require('./Forms/AdminForm/Component.vue').default,
 			Vue,
