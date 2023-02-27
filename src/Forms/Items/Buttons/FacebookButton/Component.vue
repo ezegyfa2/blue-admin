@@ -11,15 +11,19 @@
                 default: 'fab fa-facebook fa-fw'
             }
         },
-        data() {
-            return {
-                addedClasses: {
-                    root: [
-                        'btn',
-                        'btn-facebook',
-                        'btn-user',
-                        'btn-block',
-                    ]
+        
+        props: {
+            added_classes: {
+                type: Object,
+                default() {
+                    return {
+                        root: [
+                            'btn',
+                            'btn-facebook',
+                            'btn-user',
+                            'btn-block',
+                        ]
+                    }      
                 }
             }
         }
