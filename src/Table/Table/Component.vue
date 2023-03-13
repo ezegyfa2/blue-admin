@@ -46,18 +46,14 @@
         },
         data() {
             return {
-                currentRows: [],
                 refreshDataEnabled: false,
                 redirected: false,
                 dataRefresher: new Waiter(500),
-                dataTransmits: {
-                    currentRows: 'rows',
-                }
             }
         },
         mounted() {
             this.refreshDataEnabled = true
-            if (!this.currentRows || this.currentRows.length == 0) {
+            if (!this.rows || this.rows.length == 0) {
                 this.refreshDataWithAjax()
             }
         },
@@ -160,7 +156,7 @@
                             data: this.getRefreshInputData()
                         }).done((data) => {
                             console.log(JSON.parse(JSON.stringify(data.filter_sections)))
-                            self.currentRows = data.rows
+                        this.$emit('update:rows', data.rows)
                             this.$emit('update:column_names', data.column_names)
                             this.$emit('update:total_row_count', data.total_row_count)
                             this.$emit('update:filter_sections', data.filter_sections)
