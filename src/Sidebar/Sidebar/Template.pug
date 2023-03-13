@@ -7,7 +7,7 @@ ul.accordionSidebar.navbar-nav.bg-gradient-primary.sidebar.accordion(ref='sideba
         v-for="navigationLinkGroupSection in navigation_link_group_sections"
     )
         dynamic-component(
-            v-bind:component_infos='navigation_link_group_section'
+            v-bind:component_infos='navigationLinkGroupSection'
         )
         hr.sidebar-divider.my-0
     // Sidebar Toggler (Sidebar)
