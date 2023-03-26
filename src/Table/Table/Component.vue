@@ -197,7 +197,7 @@
                     $.post({
                         url: link.href,
                         data: this.refreshInputData
-                    }).done(function(data) {
+                    }).done((data) => {
                         console.log(data.filter_sections)
                         self.currentRows = data.rows
                         self.columnNames = data.column_names
