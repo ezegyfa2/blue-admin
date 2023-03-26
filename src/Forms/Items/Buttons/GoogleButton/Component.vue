@@ -9,17 +9,18 @@
             icon_class: {
                 type: String,
                 default: 'fab fa-google fa-fw'
-            }
-        },
-        data() {
-            return {
-                addedClasses: {
-                    root: [
-                        'btn',
-                        'btn-google',
-                        'btn-user',
-                        'btn-block',
-                    ]
+            },
+            added_classes: {
+                type: Object,
+                default () {
+                    return{
+                        root: [
+                            'btn',
+                            'btn-google',
+                            'btn-user',
+                            'btn-block',
+                        ]
+                    }
                 }
             }
         }

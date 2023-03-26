@@ -2,7 +2,7 @@ export default {
     "type": "landing-page",
     "data": {
         "navbar_section": {
-            "template_path": "navbar",
+            "template_type_name": "navbar",
             "params": {
                 "current_language": "++current_language",
                 "links": [
@@ -23,7 +23,7 @@ export default {
             }
         },
         "header_section": {
-            "template_path": "header",
+            "template_type_name": "header",
             "params": {
                 "title": "++header.title",
                 "content": "++header.content",
@@ -42,7 +42,7 @@ export default {
                 }
             },
             {
-                "template_path": "offers",
+                "template_type_name": "offers",
                 "params": {
                     "offers": [
                         {
@@ -84,7 +84,7 @@ export default {
                 }
             },
             {
-                "template_path": "services",
+                "template_type_name": "services",
                 "params": {
                     "title": "++services.title",
                     "subtitle": "++services.subtitle",
@@ -109,7 +109,7 @@ export default {
             }
         ],
         "contact_section": {
-            "template_path": "contactUs",
+            "template_type_name": "contactUs",
             "params": {
                 "title": "++contact_us.title",
                 "subtitle": "++contact_us.subtitle",
@@ -119,7 +119,7 @@ export default {
             }
         },
         "footer_section": {
-            "template_path": "footer",
+            "template_type_name": "footer",
             "params": {
                 "icons": [
                     {

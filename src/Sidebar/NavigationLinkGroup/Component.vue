@@ -22,17 +22,13 @@
             }
         },
         mounted() {
-            this.navigationLinkSections = []
+            this.navigation_link_sections = []
         },
         data() {
             return {
-                navigationLinkSections: [],
-                dataTransmits: {
-                    'navigationLinkSections': 'navigation_link_sections'
-                },
                 deepProperties: {
                     'toggled': [
-                        'navigationLinkSections'
+                        'navigation_link_sections'
                     ]
                 }
             }

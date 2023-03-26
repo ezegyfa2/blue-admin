@@ -7,21 +7,24 @@
             IconLink,
             Togglable
         ],
-        data() {
-            return {
-                addedClasses: {
-                    'root': [
-                        'sidebar-brand',
-                        'justify-content-center'
-                    ],
-                    '.content': [
-                        'sidebar-brand-text',
-                        'mx-3'
-                    ],
-                    'i': [
-                        'sidebar-brand-icon',
-                        'rotate-n-15'
-                    ]
+        props: {
+            added_classes: {
+                type: Object,
+                default () {
+                    return{
+                        'root': [
+                            'sidebar-brand',
+                            'justify-content-center'
+                        ],
+                        '.content': [
+                            'sidebar-brand-text',
+                            'mx-3'
+                        ],
+                        'i': [
+                            'sidebar-brand-icon',
+                            'rotate-n-15'
+                        ]
+                    }
                 }
             }
         }

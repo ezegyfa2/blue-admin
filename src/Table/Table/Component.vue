@@ -46,32 +46,20 @@
         },
         data() {
             return {
-                selectedPageNumber: 1,
-                currentRows: [],
-                columnNames: [],
                 refreshDataEnabled: false,
-                totalRowCount: 0,
-                filterSections: [],
-                filterFormItemTypePrefix: 'bootstrap-filter-form-item'
-                dataTransmits: {
-                    selectedPageNumber: 'selected_page_number',
-                    currentRows: 'rows',
-                    columnNames: 'column_names',
-                    totalRowCount: 'total_row_count',
-                    filterSections: 'filter_sections',
-                    filterFormItemTypePrefix: 'filter_form_item_type_prefix'
-                }
+                redirected: false,
+                dataRefresher: new Waiter(500),
             }
         },
         mounted() {
             this.refreshDataEnabled = true
-            if (!this.currentRows || this.currentRows.length == 0) {
+            if (!this.rows || this.rows.length == 0) {
                 this.refreshDataWithAjax()
             }
         },
         computed: {
             pageCount() {
-                let pageCount = this.totalRowCount / this.selected_row_to_show_count
+                let pageCount = this.total_row_count / this.selected_row_to_show_count
                 let roundedPageCount = Math.floor(pageCount)
                 if (pageCount == roundedPageCount) {
                     return roundedPageCount
@@ -81,19 +69,19 @@
                 }
             },
             description() {
-                let startRowCount = (this.selectedPageNumber - 1) * this.selected_row_to_show_count + 1
-                if (startRowCount > this.totalRowCount) {
-                    startRowCount = this.totalRowCount
+                let startRowCount = (this.selected_page_number - 1) * this.selected_row_to_show_count + 1
+                if (startRowCount > this.total_row_count) {
+                    startRowCount = this.total_row_count
                 }
-                let endRowCount = this.selectedPageNumber * this.selected_row_to_show_count
-                if (endRowCount > this.totalRowCount) {
-                    endRowCount = this.totalRowCount
+                let endRowCount = this.selected_page_number * this.selected_row_to_show_count
+                if (endRowCount > this.total_row_count) {
+                    endRowCount = this.total_row_count
                 }
-                return "Showing " + startRowCount + " to " + endRowCount + " of " + this.totalRowCount + " entries"
+                return "Showing " + startRowCount + " to " + endRowCount + " of " + this.total_row_count + " entries"
             },
             queryLink() {
                 let link = new URL(window.location)
-                link.searchParams.set('page-number', this.selectedPageNumber)
+                link.searchParams.set('page-number', this.selected_page_number)
                 link.searchParams.set('row-count', this.selected_row_to_show_count)
                 return link.toString()
             },
@@ -106,17 +94,89 @@
             rowToShowCountUrlParam() {
                 return parseInt(new URL(window.location).searchParams.get('row-count'))
             },
-            refreshInputData() {
+            token() {
+                return document.querySelector('meta[name="csrf-token"]').content
+            }
+        },
+        watch: {
+            selected_row_to_show_count: {
+                handler(newSelectedRowToShowCount, oldSelectedRowToShowCount) {
+                    if (typeof newSelectedRowToShowCount !== 'undefined' && newSelectedRowToShowCount !== null && newSelectedRowToShowCount != oldSelectedRowToShowCount 
+                        && (!this.redirect_enabled || newSelectedRowToShowCount != this.rowToShowCountUrlParam)) {
+                            if (this.selected_page_number == 1) {
+                                this.refreshData()
+                            }
+                            else {
+                                this.$emit('update:selected_page_number', 1)
+                            }
+                    }
+                }
+            },
+            selected_page_number: {
+                handler(newSelectedPageNumber, oldSelectedPageNumber) {
+                    console.log('selectedPageNumber ' + newSelectedPageNumber)
+                    this.$nextTick(() => {
+                        if (typeof newSelectedPageNumber !== 'undefined' && newSelectedPageNumber !== null && (!this.redirect_enabled || (newSelectedPageNumber != this.pageNumberUrlParam))) {
+                            this.refreshData()
+                        }
+                    })
+                }
+            }
+        },
+        methods: {
+            activePageClass(pageNumber) {
+                if (pageNumber == this.selected_page_number) {
+                    return 'active unclickable'
+                }
+                else {
+                    return ''
+                }
+            },
+            refreshData() {
+                if (this.refreshDataEnabled && this.selected_row_to_show_count && this.selected_page_number) {
+                    if (this.redirect_enabled) {
+                        if (!this.redirected) {
+                            this.redirected = true
+                            $.redirect(window.location.href, this.getRefreshInputData())
+                        }
+                    }
+                    else {
+                        this.refreshDataWithAjax()
+                    }
+                }
+            },
+            refreshDataWithAjax() {
+                if (this.refreshDataEnabled) {
+                    this.dataRefresher.resetAndExecute(() => {
+                        let link = new URL(window.location)
+                        link.pathname += '/get-data'
+                        let self = this
+                        $.post({
+                            url: link.href,
+                            data: this.getRefreshInputData()
+                        }).done((data) => {
+                            console.log(JSON.parse(JSON.stringify(data.filter_sections)))
+                        this.$emit('update:rows', data.rows)
+                            this.$emit('update:column_names', data.column_names)
+                            this.$emit('update:total_row_count', data.total_row_count)
+                            this.$emit('update:filter_sections', data.filter_sections)
+                        })
+                    })
+                }
+            },
+            getRefreshInputData() {
                 return {
-                    'page-number': this.selectedPageNumber, 
+                    'page-number': this.selected_page_number, 
                     'row-count': this.selected_row_to_show_count,
-                    'filter-data': this.filterData,
+                    'filter-data': this.getFilterData(),
                     '_token': document.querySelector('meta[name="csrf-token"]').content
                 }
             },
-            filterData() {
+            getFilterData() {
+                console.log("ez itt")
                 let filterSectionsData = {}
-                this.filterSections.forEach((filterSection) => {
+                this.filter_sections.forEach((filterSection) => {
+                    console.log(JSON.stringify(filterSection))
                     let filterData = {
                         name: filterSection.data.name,
                     }
@@ -139,72 +199,6 @@
                     filterSectionsData[filterSection.data.name] = filterData
                 })
                 return filterSectionsData
-            },
-            token() {
-                return document.querySelector('meta[name="csrf-token"]').content
-            }
-        },
-        watch: {
-            selected_row_to_show_count: {
-                handler(newSelectedRowToShowCount, oldSelectedRowToShowCount) {
-                    console.log('sdf')
-                    if (typeof newSelectedRowToShowCount !== 'undefined' && newSelectedRowToShowCount !== null && newSelectedRowToShowCount != oldSelectedRowToShowCount 
-                        && (!this.redirect_enabled || newSelectedRowToShowCount != this.rowToShowCountUrlParam)) {
-                            if (this.selectedPageNumber == 1) {
-                                this.refreshData()
-                            }
-                            else {
-                                this.selectedPageNumber = 1
-                            }
-                    }
-                }
-            },
-            selectedPageNumber: {
-                handler(newSelectedPageNumber, oldSelectedPageNumber) {
-                    console.log('selectedPageNumber ' + newSelectedPageNumber)
-                    this.$nextTick(() => {
-                        if (typeof newSelectedPageNumber !== 'undefined' && newSelectedPageNumber !== null && (!this.redirect_enabled || (newSelectedPageNumber != this.pageNumberUrlParam))) {
-                            this.refreshData()
-                        }
-                    })
-                }
-            }
-        },
-        methods: {
-            activePageClass(pageNumber) {
-                if (pageNumber == this.selectedPageNumber) {
-                    return 'active unclickable'
-                }
-                else {
-                    return ''
-                }
-            },
-            refreshData() {
-                if (this.refreshDataEnabled && this.selected_row_to_show_count && this.selectedPageNumber) {
-                    if (this.redirect_enabled) {
-                        $.redirect(window.location.href, this.refreshInputData)
-                    }
-                    else {
-                        this.refreshDataWithAjax()
-                    }
-                }
-            },
-            refreshDataWithAjax() {
-                if (this.refreshDataEnabled) {
-                    let link = new URL(window.location)
-                    link.pathname += '/get-data'
-                    let self = this
-                    $.post({
-                        url: link.href,
-                        data: this.refreshInputData
-                    }).done((data) => {
-                        console.log(data.filter_sections)
-                        self.currentRows = data.rows
-                        self.columnNames = data.column_names
-                        self.totalRowCount = data.total_row_count
-                        self.filterSections = data.filter_sections
-                    });
-                }
             }
         }
     }
