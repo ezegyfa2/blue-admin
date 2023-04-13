@@ -94,40 +94,6 @@
             rowToShowCountUrlParam() {
                 return parseInt(new URL(window.location).searchParams.get('row-count'))
             },
-            refreshInputData() {
-                return {
-                    'page-number': this.selected_page_number, 
-                    'row-count': this.selected_row_to_show_count,
-                    'filter-data': this.filterData,
-                    '_token': document.querySelector('meta[name="csrf-token"]').content
-                }
-            },
-            filterData() {
-                let filterSectionsData = {}
-                this.filter_sections.forEach((filterSection) => {
-                    let filterData = {
-                        name: filterSection.data.name,
-                    }
-                    if (typeof filterSection.data.value !== 'undefined' && filterSection.data.value !== null) {
-                        if (filterSection.data.value && typeof filterSection.data.value == 'object') {
-                            if (typeof filterSection.data.value.value !== 'undefined' && filterSection.data.value.value !== null) {
-                                filterData.value = filterSection.data.value.value
-                            }
-                        }
-                        else {
-                            filterData.value = filterSection.data.value
-                        }
-                    } 
-                    if (typeof filterSection.data.from_value !== 'undefined' && filterSection.data.from_value !== null) {
-                        filterData.from_value = filterSection.data.from_value
-                    } 
-                    if (typeof filterSection.data.to_value !== 'undefined' && filterSection.data.to_value !== null) {
-                        filterData.to_value = filterSection.data.to_value
-                    } 
-                    filterSectionsData[filterSection.data.name] = filterData
-                })
-                return filterSectionsData
-            },
             token() {
                 return document.querySelector('meta[name="csrf-token"]').content
             },
@@ -176,7 +142,7 @@
                     if (this.redirect_enabled) {
                         if (!this.redirected) {
                             this.redirected = true
-                            $.redirect(window.location.href, this.refreshInputData)
+                            $.redirect(window.location.href, this.getRefreshInputData())
                         }
                     }
                     else {
@@ -193,7 +159,7 @@
                         console.log(this.refreshInputData)
                         $.post({
                             url: link.href,
-                            data: this.refreshInputData
+                            data: this.getRefreshInputData()
                         }).done((data) => {
                             console.log(JSON.parse(JSON.stringify(data.filter_sections)))
                             this.rows = data.rows
@@ -214,22 +180,41 @@
                     })
                 }
             },
-            getFilterSectionValue(filterSectionName) {
-                let filterSection = this.getFilterSection(filterSectionName)
-                if (filterSection && filterSection.data.value) {
-                    return filterSection.data.value
-                }
-                else {
-                    return null
+            getRefreshInputData() {
+                return {
+                    'page-number': this.selected_page_number, 
+                    'row-count': this.selected_row_to_show_count,
+                    'filter-data': this.getFilterData(),
+                    '_token': document.querySelector('meta[name="csrf-token"]').content
                 }
             },
-            getFilterSection(filterSectionName) {
-                for (let filterSection of this.filter_sections) {
-                    if (filterSection.data.name == filterSectionName) {
-                        return filterSection
+            getFilterData() {
+                console.log("ez itt")
+                let filterSectionsData = {}
+                this.filter_sections.forEach((filterSection) => {
+                    console.log(JSON.stringify(filterSection))
+                    let filterData = {
+                        name: filterSection.data.name,
                     }
-                }
-                return null
+                    if (typeof filterSection.data.value !== 'undefined' && filterSection.data.value !== null) {
+                        if (filterSection.data.value && typeof filterSection.data.value == 'object') {
+                            if (typeof filterSection.data.value.value !== 'undefined' && filterSection.data.value.value !== null) {
+                                filterData.value = filterSection.data.value.value
+                            }
+                        }
+                        else {
+                            filterData.value = filterSection.data.value
+                        }
+                    } 
+                    if (typeof filterSection.data.from_value !== 'undefined' && filterSection.data.from_value !== null) {
+                        filterData.from_value = filterSection.data.from_value
+                    } 
+                    if (typeof filterSection.data.to_value !== 'undefined' && filterSection.data.to_value !== null) {
+                        filterData.to_value = filterSection.data.to_value
+                    } 
+                    filterSectionsData[filterSection.data.name] = filterData
+                })
+                return filterSectionsData
             }
         }
     }
