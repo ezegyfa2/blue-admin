@@ -7,7 +7,6 @@
     import Togglable from '../../../../helper-vue-components/src/Toggle/Togglable.vue'
     import DeepData from '../../../../helper-vue-components/src/DeepData.vue'
     import ClassAdder from '../../../../helper-vue-components/src/ClassAdder.vue'
-    import DataTransmitting from '../../../../helper-vue-components/src/DataTransmitting.vue'
 
     export default {
         mixins: [
@@ -15,7 +14,6 @@
             Togglable,
             DeepData,
             ClassAdder,
-            DataTransmitting
         ],
         props: {
             brand_section: {
@@ -27,9 +25,6 @@
         },
         data() {
             return {
-                dataTransmits: {
-                    'toggled': 'isToggled',
-                },
                 deepProperties: {
                     'toggled': [
                         'brand_section',

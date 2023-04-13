@@ -10,6 +10,7 @@
                         blue-admin-table-select(
                             v-bind:value.sync='selected_row_to_show_count'
                             v-bind:options='row_to_show_counts'
+                            v-bind:live_search='false'
                             name='row_to_show_count'
                         )
                         |    entries
