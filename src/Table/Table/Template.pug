@@ -1,19 +1,19 @@
 .container-fluid
     .card.mb-4
         .card-header.py-3
-            h6.m-0.font-weight-bold.text-primary {{ title }}
+            h6.m-0.font-weight-bold.text-primary.text-uppercase {{ title }}
         .card-body
             .row.mb-2
                 .col-sm-12.col-md-6
                     label
-                        | Show 
+                        p Show
                         blue-admin-table-select(
                             v-bind:value.sync='selected_row_to_show_count'
                             v-bind:options='row_to_show_counts'
                             v-bind:live_search='false'
                             name='row_to_show_count'
                         )
-                        |    entries
+                        p entries
                 .col-sm-12.col-md-6.create_button_container
                     blue-admin-create-button(
                         content='Create'
@@ -28,10 +28,10 @@
                 v-bind:filter_form_item_type_prefix='filter_form_item_type_prefix'
                 v-on:update:filter_sections='refreshDataWithAjax'
             ) 
-            .row
-                .col-sm-12.col-md-5
+            .row.row-cols-auto
+                .col-sm-12.col-md-12.col-lg-5
                     .dataTables_info(role='status' aria-live='polite') {{ description }}
-                .col-sm-12.col-md-7
+                .col-sm-12.col-md-12.col-lg-7
                     bootstrap-pagination(
                         v-bind:page_count='pageCount' 
                         v-bind:selected_page_number.sync='selected_page_number'

@@ -3,16 +3,29 @@
 .card, .table {
     color: $gray-600;
 }
+
 label {
     font-weight: normal;
-    text-align: left;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    max-width: 200px;
 }
+
+label p, div.v-select {
+    margin-right: 10px;
+}
+
+label p {
+    margin-bottom: 0;
+}
+
 .dataTables_paginate {
     margin: 0;
     white-space: nowrap;
     text-align: right;
 }
+
 .create_button_container {
     text-align: end;
 }
