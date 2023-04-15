@@ -1,0 +1,10 @@
+@import '../../styles/variables';
+
+.btn-green {
+    color: $white;
+    background-color: $green;
+}
+
+.btn-green:hover {
+    background-color: $teal;
+}
