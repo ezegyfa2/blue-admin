@@ -1,4 +1,4 @@
-ul.accordionSidebar.navbar-nav.bg-gradient-primary.sidebar.accordion(ref='sidebar' v-bind:class='toggledClass')
+ul.accordionSidebar.navbar-nav.sidebar-bg-gradient.sidebar.accordion(ref='sidebar' v-bind:class='toggledClass')
     dynamic-component(
         v-bind:component_infos='brand_section'
     )
@@ -11,5 +11,5 @@ ul.accordionSidebar.navbar-nav.bg-gradient-primary.sidebar.accordion(ref='sideba
         )
         hr.sidebar-divider.my-0
     // Sidebar Toggler (Sidebar)
-    .toggler.text-center.d-none.d-md-inline(ref='toggler')
+    .toggler.text-center.mt-3.d-none.d-md-inline(ref='toggler')
         button#sidebarToggle.rounded-circle.border-0

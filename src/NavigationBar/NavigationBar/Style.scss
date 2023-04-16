@@ -1,5 +1,5 @@
-@import '~bootstrap/scss/bootstrap';
 @import '../../styles/variables';
+@import '~bootstrap/scss/bootstrap';
 @import '../../styles/utilities';
 
 .topbar {
@@ -20,4 +20,8 @@
         height: calc(#{$topbar-base-height} - 2rem);
         margin: auto 1rem;
     }
+}
+
+.bg-gradient {
+    background-color: $blue;
 }

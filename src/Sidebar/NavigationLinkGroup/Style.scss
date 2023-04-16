@@ -4,15 +4,15 @@
 
 .sidebar-heading {
     margin-top: 1rem;
-    text-align: center;
+    text-align: left;
     padding: 0 1rem;
     font-weight: 800;
-    font-size: 0.65rem;
+    font-size: 1rem;
     @extend .text-uppercase;
     color: fade-out($white, 0.6);
 }
 
-@include media-breakpoint-up(md) {
+@include media-breakpoint-down(md) {
     .sidebar-heading {
         text-align: left;
         &.toggled {
