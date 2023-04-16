@@ -1,4 +1,5 @@
 @import '../../styles/variables';
+@import '~bootstrap/scss/bootstrap';
 
 .card, .table {
     color: $gray-600;
@@ -10,6 +11,10 @@ label {
     display: flex;
     align-items: center;
     max-width: 200px;
+}
+
+.card-header-bg {
+    background-color: $blue;
 }
 
 label p, div.v-select {
@@ -28,4 +33,10 @@ label p {
 
 .create_button_container {
     text-align: end;
+}
+
+@include media-breakpoint-down(md) {
+    .extra-margin {
+        margin-bottom: 10px;
+    }
 }
