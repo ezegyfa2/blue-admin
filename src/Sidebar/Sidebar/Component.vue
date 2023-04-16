@@ -7,6 +7,7 @@
     import Togglable from '../../../../helper-vue-components/src/Toggle/Togglable.vue'
     import DeepData from '../../../../helper-vue-components/src/DeepData.vue'
     import ClassAdder from '../../../../helper-vue-components/src/ClassAdder.vue'
+    import DataTransmitting from '../../../../helper-vue-components/src/DataTransmitting.vue'
 
     export default {
         mixins: [
