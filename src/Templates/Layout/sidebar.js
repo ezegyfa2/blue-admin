@@ -6,7 +6,7 @@ export default {
             "data": {
                 "url": "/",
                 "icon_class": "fas fa-laugh-wink",
-                "content": "-++sidebar.title"
+                "content": "--admin.layout.sidebar.title"
             }
         },
         "navigation_link_group_sections": "++sidebar_sections"

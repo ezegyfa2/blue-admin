@@ -11,7 +11,7 @@
             added_classes: {
                 type: Object,
                 default () {
-                    return{
+                    return {
                         'root': [
                             'sidebar-brand',
                             'justify-content-center'

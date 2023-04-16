@@ -5,13 +5,13 @@ export default {
             {
                 "type": "blue-admin-navigation-search",
                 "data": {
-                    "placeholder": "++search_placeholder"
+                    "placeholder": "--search_placeholder"
                 }
             }
         ],
         "navigation_link_sections": [
             {
-                "template_path": "notificationsLink",
+                "template_type_name": "notificationsLink",
                 "params": {
                     "header_title": "++notification_link.header_title",
                     "notifications": "++notification_link.notifications",
