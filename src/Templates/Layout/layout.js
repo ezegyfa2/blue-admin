@@ -2,15 +2,13 @@ export default {
     "type": "blue-admin-page",
     "data": {
         "sidebar_section": {
-            "template_path": "sidebar",
+            "template_type_name": "blue_admin_sidebar",
             "params": {
                 "sidebar_sections": "++sidebar_sections"
             }
         },
         "navigation_bar_section": {
-            "template_path": "navbar",
-            "params": {
-            }
+            "template_type_name": "blue_admin_navigationBar"
         },
         "content_sections": [
             {

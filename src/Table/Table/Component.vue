@@ -190,17 +190,16 @@
                         // The url contains the table name
                         let link = new URL(window.location)
                         link.pathname += '/get-data'
-                        let self = this
                         console.log(this.refreshInputData)
                         $.post({
                             url: link.href,
                             data: this.refreshInputData
                         }).done((data) => {
                             console.log(JSON.parse(JSON.stringify(data.filter_sections)))
-                        this.$emit('update:rows', data.rows)
                             this.rows = data.rows
                             this.column_names = data.column_names
                             this.total_row_count = data.total_row_count
+                            this.filter_sections = data.filter_sections
                             data.filter_sections.forEach(filterSection => {
                                 let filterSectionValue = this.getFilterSectionValue(filterSection.data.name)
                                 if (filterSectionValue) {
@@ -209,9 +208,6 @@
                             })
                             this.filter_sections = data.filter_sections
                             /*this.$emit('update:rows', data.rows)
-                            this.$emit('update:column_names', data.column_names)
-                            this.$emit('update:total_row_count', data.total_row_count)
-                            this.$emit('update:filter_sections', data.filter_sections)
                             this.$emit('update:filter_sections', data.filter_sections)*/
                         })
                     })
