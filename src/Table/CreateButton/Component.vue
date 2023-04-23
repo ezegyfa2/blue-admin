@@ -12,7 +12,7 @@
                     return{
                         root: [
                             'btn',
-                            'btn-green'
+                            'btn-create'
                         ]
                     }
                 }
