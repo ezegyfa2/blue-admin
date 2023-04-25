@@ -1,10 +1,11 @@
 @import '../../styles/variables';
 
-.btn-green {
+.btn-create {
     color: $white;
     background-color: $green;
 }
 
-.btn-green:hover {
-    background-color: $teal;
+.btn-create:hover {
+    color: $white;
+    opacity: 0.8;
 }

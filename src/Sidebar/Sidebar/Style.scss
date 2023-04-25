@@ -12,7 +12,6 @@
     
         #sidebarToggle::after {
             content: '\f105';
-            margin-left: 0.25rem;
             color: fade-out($white, 0.5);
         }
     
@@ -37,7 +36,6 @@
         font-weight: 900;
         content: '\f104';
         font-family: 'Font Awesome 5 Free';
-        margin-right: 0.1rem;
     }
 
     &:hover {

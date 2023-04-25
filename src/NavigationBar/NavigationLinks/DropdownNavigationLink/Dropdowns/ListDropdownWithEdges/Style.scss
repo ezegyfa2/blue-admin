@@ -6,13 +6,13 @@
     .dropdown-menu {
         font-size: 0.85rem;
         width: calc(100% - #{$grid-gutter-width});
-        right: $grid-gutter-width / 2;
+        right: calc($grid-gutter-width / 2);
         .dropdown-header {
             @extend .text-uppercase;
             font-weight: 800;
             font-size: 0.65rem;
             width: 100%;
-            right: $grid-gutter-width / 2;
+            right: calc($grid-gutter-width / 2);
             background-color: $primary;
             border: 1px solid $primary;
             padding-top: 0.75rem;
