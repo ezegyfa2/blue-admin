@@ -15,7 +15,6 @@
             Togglable,
             DeepData,
             ClassAdder,
-            DataTransmitting
         ],
         props: {
             brand_section: {

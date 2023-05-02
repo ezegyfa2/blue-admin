@@ -199,7 +199,6 @@
                             this.rows = data.rows
                             this.column_names = data.column_names
                             this.total_row_count = data.total_row_count
-                            this.filter_sections = data.filter_sections
                             data.filter_sections.forEach(filterSection => {
                                 let filterSectionValue = this.getFilterSectionValue(filterSection.data.name)
                                 if (filterSectionValue) {
