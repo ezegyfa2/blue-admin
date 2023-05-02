@@ -12,7 +12,8 @@
     
         #sidebarToggle::after {
             content: '\f105';
-            color: fade-out($white, 0.5);
+            color: $white;
+            opacity: 0.5;
         }
     
         .sidebar-card {
@@ -29,17 +30,20 @@
     text-align: center;
     margin-bottom: 1rem;
     cursor: pointer;
-    background-color: fade-out($white, 0.8);
+    background-color: $white;
+    opacity: 0.8;
 
     &::after {
-        color: fade-out($white, 0.5);
+        color: $white;
+        opacity: 0.5;
         font-weight: 900;
         content: '\f104';
         font-family: 'Font Awesome 5 Free';
     }
 
     &:hover {
-        background-color: fade-out($white, 0.75);
+        background-color: $white;
+        opacity: 0.75;
         text-decoration: none;
     }
 
@@ -54,7 +58,8 @@
 
 hr.sidebar-divider {
     margin: 0 1rem 1rem;
-    border-top: 1px solid fade-out($white, 0.85);
+    border-top: 1px solid $white;
+    opacity: 0.85;
 }
 
 @include media-breakpoint-up(md) {

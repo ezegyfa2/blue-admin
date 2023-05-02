@@ -9,7 +9,7 @@
     font-weight: 800;
     font-size: 1rem;
     @extend .text-uppercase;
-    color: fade-out($white, 0.6);
+    color: inherit;
 }
 
 @include media-breakpoint-down(md) {
