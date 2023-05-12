@@ -5,4 +5,4 @@
         v-for='dropdownItemSection in dropdown_item_sections'
         v-bind:component_infos='dropdownItemSection'
     )
-    a.dropdown-item.text-center.small.text-gray-500(v-bind:href='this.footer_link.url') {{ footer_link.content }}
+    a.dropdown-item.text-center.small.text-gray-500(v-if='this.footer_link' v-bind:href='this.footer_link.url') {{ footer_link.content }}
