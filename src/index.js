@@ -12,12 +12,6 @@ export default {
 			'blue-admin-vue-components/AdminPage/Component.vue'
 		);
 		registerVueComponent(
-			'blue-admin-centered-content-page',
-			require('./CenteredContentPage/Component.vue').default,
-			Vue,
-			'blue-admin-vue-components/CenteredContentPage/Component.vue'
-		);
-		registerVueComponent(
 			'blue-admin-centered-content',
 			require('./CenteredContent/Component.vue').default,
 			Vue,

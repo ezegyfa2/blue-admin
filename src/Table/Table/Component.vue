@@ -3,7 +3,12 @@
 </template>
 
 <script>
+    import ServerData from '../../../../helper-vue-components/src/ServerData.vue'
+
     export default {
+        mixins: [
+            ServerData
+        ],
         props: {
             title: {
                 type: String
@@ -30,10 +35,6 @@
             selected_page_number: {
                 type: Number
             },
-            redirect_enabled: {
-                type: Boolean,
-                default: false
-            },
             filter_sections: {
                 type: Array,
                 default() {
@@ -44,20 +45,15 @@
                 type: String
             }
         },
-        data() {
-            return {
-                refreshDataEnabled: false,
-                redirected: false,
-                dataRefresher: new Waiter(500),
-            }
-        },
         mounted() {
-            this.refreshDataEnabled = true
             if (!this.rows || this.rows.length == 0) {
                 this.refreshDataWithAjax()
             }
         },
         computed: {
+            refreshEnabled() {
+                return this.refreshDataEnabled && this.selected_row_to_show_count && this.selected_page_number
+            },
             pageCount() {
                 let pageCount = this.total_row_count / this.selected_row_to_show_count
                 let roundedPageCount = Math.floor(pageCount)
@@ -99,7 +95,7 @@
                     'page-number': this.selected_page_number, 
                     'row-count': this.selected_row_to_show_count,
                     'filter-data': this.filterData,
-                    '_token': document.querySelector('meta[name="csrf-token"]').content
+                    '_token': getCsrfToken()
                 }
             },
             filterData() {
@@ -127,14 +123,6 @@
                     filterSectionsData[filterSection.data.name] = filterData
                 })
                 return filterSectionsData
-            },
-            token() {
-                return document.querySelector('meta[name="csrf-token"]').content
-            },
-            dataUrl() {
-                let link = new URL(window.location)
-                link.pathname += '/get-select-options'
-                return link.href
             }
         },
         watch: {
@@ -152,8 +140,7 @@
                 }
             },
             selected_page_number: {
-                handler(newSelectedPageNumber, oldSelectedPageNumber) {
-                    console.log('selectedPageNumber ' + newSelectedPageNumber)
+                handler(newSelectedPageNumber) {
                     this.$nextTick(() => {
                         if (typeof newSelectedPageNumber !== 'undefined' && newSelectedPageNumber !== null && (!this.redirect_enabled || (newSelectedPageNumber != this.pageNumberUrlParam))) {
                             this.refreshData()
@@ -171,46 +158,19 @@
                     return ''
                 }
             },
-            refreshData() {
-                if (this.refreshDataEnabled && this.selected_row_to_show_count && this.selected_page_number) {
-                    if (this.redirect_enabled) {
-                        if (!this.redirected) {
-                            this.redirected = true
-                            $.redirect(window.location.href, this.refreshInputData)
-                        }
+            processResponse(data) {
+                this.rows = data.rows
+                this.column_names = data.column_names
+                this.total_row_count = data.total_row_count
+                data.filter_sections.forEach(filterSection => {
+                    let filterSectionValue = this.getFilterSectionValue(filterSection.data.name)
+                    if (filterSectionValue) {
+                        filterSection.data.value = filterSectionValue
                     }
-                    else {
-                        this.refreshDataWithAjax()
-                    }
-                }
-            },
-            refreshDataWithAjax() {
-                if (this.refreshDataEnabled) {
-                    this.dataRefresher.resetAndExecute(() => {
-                        // The url contains the table name
-                        let link = new URL(window.location)
-                        link.pathname += '/get-data'
-                        console.log(this.refreshInputData)
-                        $.post({
-                            url: link.href,
-                            data: this.refreshInputData
-                        }).done((data) => {
-                            console.log(JSON.parse(JSON.stringify(data.filter_sections)))
-                            this.rows = data.rows
-                            this.column_names = data.column_names
-                            this.total_row_count = data.total_row_count
-                            data.filter_sections.forEach(filterSection => {
-                                let filterSectionValue = this.getFilterSectionValue(filterSection.data.name)
-                                if (filterSectionValue) {
-                                    filterSection.data.value = filterSectionValue
-                                }
-                            })
-                            this.filter_sections = data.filter_sections
-                            /*this.$emit('update:rows', data.rows)
-                            this.$emit('update:filter_sections', data.filter_sections)*/
-                        })
-                    })
-                }
+                })
+                this.filter_sections = data.filter_sections
+                /*this.$emit('update:rows', data.rows)
+                this.$emit('update:filter_sections', data.filter_sections)*/
             },
             getFilterSectionValue(filterSectionName) {
                 let filterSection = this.getFilterSection(filterSectionName)
