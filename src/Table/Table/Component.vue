@@ -95,6 +95,7 @@
                     'page-number': this.selected_page_number, 
                     'row-count': this.selected_row_to_show_count,
                     'filter-data': this.filterData,
+                    'order-data': this.orderData,
                     '_token': getCsrfToken()
                 }
             },
@@ -123,6 +124,18 @@
                     filterSectionsData[filterSection.data.name] = filterData
                 })
                 return filterSectionsData
+            },
+            orderData() {
+                let ordersData = {}
+                this.filter_sections.forEach((filterSection) => {
+                    if (
+                        typeof filterSection.data.order !== 'undefined' 
+                        && filterSection.data.order !== null 
+                        && filterSection.data.order !== 'none' ) {
+                        ordersData[filterSection.data.name] = filterSection.data.order
+                    }
+                })
+                return ordersData
             }
         },
         watch: {
